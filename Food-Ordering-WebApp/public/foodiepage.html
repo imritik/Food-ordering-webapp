@@ -1,0 +1,148 @@
+<!--Customer Page-->
+<!DOCTYPE>
+<html ng-app = "myApp">
+<head>
+<style type="text/css">
+	textarea
+    {
+      width: 150px;
+      height: 100px;
+      vertical-align: middle;
+    }
+</style>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+	
+	<title> Hot Spice Foodie Page </title>
+</head>
+
+<body >
+
+	<!--Div to select the dishes-->
+	<div class = "container" ng-controller="foodieController" ng-init="init()">
+		<div ng-show="showFoodiePage">
+		<h1>Welcome to HotSpice</h1>
+			<table class="table">
+				<tbody>
+					<tr>
+						<td>
+							<select name="select" ng-model="cat.name" ng-options="cat.name as cat.name for cat in categories" ng-click="showSelectedCategory(cat.name)">
+								<option value="">All</option>
+							</select>
+						</td>
+						<td>
+							<select name="select" ng-model="sort.name" ng-options="sort.name as sort.name for sort in sortedDishes" ng-click="sortDishes(sort.name)">
+								<option value="">Sort By</option>
+							</select>
+						</td>
+						<td>
+							<button class = "btn btn-primary" ng-click="reviewOrder()" ng-show="firstTime">Review Order</button>
+							<button class = "btn btn-primary" ng-click="reviewOrderAgain()" ng-show="nextTime">Done</button>
+							
+						</td>
+						<td><button class = "btn btn-primary" ng-click="showRecentOrders()">My Recent Orders</button></td>
+					</tr>
+					<tr ng-repeat="dish in dish">
+						<td>{{dish.name}}</td>
+						<td>{{dish.price}}</td>
+						<td><button class="btn btn-warning" ng-click="addDish(dish.name, dish.price)">+</button>
+							{{dishCounter[dish.name]}}
+							<button class="btn btn-warning" ng-click="removeDish(dish.name, dish.price)">-</button>
+						</td>
+	  					<td><button class="btn btn-danger" ng-click="removeallDishes(dish.name)">Remove</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!--Div for reviewing orders-->
+		<div ng-show="showOrderPage">
+			<h1>Review Order</h1>
+
+			<table class="table">
+				<thead>
+					<th>Dish Name</th>
+					<th>Quantity</th>
+					<th>Price</th>
+					<th>Total</th>
+					<td><button class="btn btn-info" ng-click="editQuantity()">Edit Quantity</button>
+					<button class="btn btn-info" ng-click="modifyOrder()">Modify Order</button></td>
+				</thead>
+				<tbody>
+					<tr ng-repeat="dish in dishSelected.dish">
+						<td>{{dish.name}}</td>
+						<td>{{dish.quantity}}</td>
+						<td>{{dish.price}}</td>
+						<td>{{dish.totalPrice}}</td>
+					</tr>
+				</tbody>
+			</table>
+			<label for="numberEdit">Number</label>
+    		<input id="numberEdit" type="text" ng-model="phoneNumber" />
+    		<br/><br/>
+			<label for="textareaEdit">Address</label>
+		    <textarea id="textareaEdit" ng-model="address"></textarea>
+
+		   	<br/><br/>
+		   	<td><button class="btn btn-primary" ng-click="placeOrder()">Place Order</button>
+		</div>
+
+		<!--Div for the editing of order-->
+		<div ng-show="editOrderPage">
+			<h1>Review Order</h1>
+
+			<table class="table">
+				<thead>
+					<th>Dish Name</th>
+					<th>Quantity</th>
+					<td><button class = "btn btn-primary" ng-click="reviewOrderAgain()">Done</button></td>
+				</thead>
+				<tbody>
+					<tr ng-repeat="dish in dishSelected.dish">
+						<td>{{dish.name}}</td>
+						<td>{{dish.price}}</td>
+						<td><button class="btn btn-warning" ng-click="addDish(dish.name, dish.price)">+</button>
+							{{dishCounter[dish.name]}}
+							<button class="btn btn-warning" ng-click="removeDish(dish.name, dish.price)">-</button>
+						</td>
+	  					<td><button class="btn btn-danger" ng-click="removeallDishes(dish.name)">Remove</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<!--Div for the recent orders-->
+		<div ng-show="showMyRecentOrders">
+			<h1>Recent Orders</h1>
+			<h4>Please enter yout registered number</h4>
+			<label for="numberEdit">Number</label>
+    		<input id="numberEdit" type="text" ng-model="phoneNumber" />
+    		<button class="btn btn-primary" ng-click="fetchMyRecentOrders(phoneNumber)">Submit</button>
+    		<br/>
+    		<br/>
+    		<br/>
+			<table class="table">
+				<thead>
+					<th>Name</th>
+					<th>Price</th>
+					<th>Quantity</th>
+					<th>Total Price</th>
+				</thead>
+				<tbody ng-repeat="myorder in myOrders">
+					<tr ng-repeat="index in getIndex(myorder)">
+						<td>{{myorder.dish[index].name}}</td>
+						<td>{{myorder.dish[index].price}}</td>
+						<td>{{myorder.dish[index].quantity}}</td>
+						<td>{{myorder.dish[index].totalPrice}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+	<script src="controllers/foodiePageController.js"></script>
+</body>
+</html>

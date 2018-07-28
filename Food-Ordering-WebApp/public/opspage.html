@@ -1,0 +1,144 @@
+<!--Operations page-->
+
+<!DOCTYPE>
+<html ng-app = "myApp">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+	
+	<title> Hot Spice Ops Page </title>
+</head>
+
+<body>
+	<!--Div for Adding categories-->
+	<div class = "container" ng-controller="opsController">
+		<h1>Welcome to HotSpice Maintainence</h1>
+		<button class = "btn btn-primary" ng-click="createCategory()">Create Category</button>
+		<button class = "btn btn-primary" ng-click="addDishToCategory()">Add dish to category</button>
+		<button class = "btn btn-primary" ng-click="checkOrders()">Show Orders</button>
+		<button class = "btn btn-primary" ng-click="updateOrders()">Update Order status</button>
+
+		<div>
+			<div class="container" ng-show="showCategory" >
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Category Name</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><input class="form-control" ng-model="category.name" style="width: auto" ></td>
+							<td>
+								<button class = "btn btn-info" ng-click="addCategory(category.name)">Add category</button>
+								<button class = "btn btn-info" ng-click="clearCategoryData()">Clear</button>
+							</td>
+						</tr>
+						<tr ng-repeat="category in category">
+						<td>{{category.name}}</td>
+						<td>&nbsp;</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!--Div for adding dishes to the categories-->
+			<div class="container" ng-show="showDish">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Select Category</th>
+							<th>Dish Name</th>
+							<th>Dish Price</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><select name="select" ng-model="item.name" ng-options="item.name as item.name for item in categories">
+									<option value="">Select Category</option>
+								</select>
+							</td>
+							<td><input class="form-control" ng-model="dish.name"></td>
+							<td><input type="number" name="input" ng-model="dish.price"></td>
+							<td>
+								<button class = "btn btn-info" ng-click="addDish(dish.name, dish.price, item.name)">Add Dish</button>
+								<button class = "btn btn-info" ng-click="clearDishData()">Clear</button>
+							</td>
+						</tr>
+						<tr ng-repeat="dish in dish">
+							<td>{{dish.categoryName}}</td>
+							<td>{{dish.name}}</td>
+							<td>{{dish.price}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<!--Div for checking orders placed-->
+			<div class="container" ng-show="showOrders">
+				<br/>
+				<br/>
+				<select name="select" ng-model="order.name" ng-options="order.name as order.name for order in orderCategories" ng-click="sortOrders(order.name)">
+					<option value="">Sort by Status</option>
+				</select>
+				<br/>
+				<br/>
+
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Customer Number</th>
+							<th>Order Price</th>
+							<th>Order Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="order in orders">
+							<td>{{order.contact}}</td>
+							<td>{{order.orderTotalPrice}}</td>
+							<td>{{order.orderStatus}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<!--Div for modifying the status of the orders-->
+			<div class="container" ng-show="showOrderUpdate">
+				<br/>
+				<br/>
+				<table class="table">
+					<thead>
+						<tr>
+							<th><button ng-style="{color : 'black'}" ng-click="sortOrders('Received')">Change Status To Fulfilled</button></th>
+							<th><button ng-style="{color : 'black'}" ng-click="sortOrders('Fulfilled')">Change Status To Dispatched</button></th>
+							<th><button ng-style="{color : 'black'}" ng-click="sortOrders('Dispatched')">Change Status To Delievered</button></th>
+							<th></th>
+						</tr>
+						<tr ng-show="onClick">
+							<th>Contact Number</th>
+							<th>Amount</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="order in ordersToChangeStatus">
+							<td>{{order.contact}}</td>
+							<td>{{order.orderTotalPrice}}</td>
+							<td>{{order.orderStatus}}</td>
+							<td><button ng-style="{color : 'green'}" ng-click="changeStatus(order._id)">{{changedStatus}}</button></td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+	</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+<script src="controllers/opsPageController.js"></script>
+</body>
+</html>
